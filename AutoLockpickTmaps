@@ -1,0 +1,418 @@
+######################
+# Auto Lockpick/Tmap #
+######################
+#Questions? Contact Raidstar.
+
+clearsysmsg
+
+#Variables
+@setvar! changeToHarvestAspect 0
+@setvar! changeToFortuneAspect 0
+@setvar! changeToNecklaceWithRareLinks 0
+@setvar! delayToOpenChestDueToNecklaceTimer 9000
+@setvar! dropMapDirtToFloor 1
+@setvar! autoRecall 1
+@setvar! recallTome 0x408DC3BD
+
+#Do not modify...
+unsetvar chest
+@setvar! locked 0
+@setvar! trapped 0
+@setvar! trapFirstTime 0
+@setvar! lockFirstTime 0
+
+#Create loot list
+if not listexists lootTypes
+    overhead 'Compiling list...' 498
+    createlist lootTypes
+    # Aspect Extract
+    pushlist lootTypes 0xefc
+    # Aspect Core
+    pushlist lootTypes 0xf91
+    # Deed
+    pushlist lootTypes "deed"
+    # Skill Orb
+    pushlist lootTypes 0x5740
+    # Research Material
+    pushlist lootTypes "research materials"
+    # MCD
+    pushlist lootTypes 0x42bf
+    # Rare Cloth
+    pushlist lootTypes "folded cloth"
+    # Plant Chemicals
+    pushlist lootTypes "bottle"
+    # Chain Link
+    pushlist lootTypes 0xa8c6
+    # Mastery Scroll
+    pushlist lootTypes 0x227a
+    # Skill Scroll
+    pushlist lootTypes 0xef3
+    # Research Mats
+    pushlist lootTypes 0x72a4
+    # Bottle?
+    pushlist lootTypes "bottle"
+    
+    # Tmap
+    pushlist lootTypes 0x14ec
+    # Gold
+    pushlist lootTypes 0xeed
+    # Seed
+    pushlist lootTypes "dungeon seed"
+    pushlist lootTypes "seed of renewal"
+    pushlist lootTypes "card"
+    
+    # Black Pearl
+    pushlist lootTypes 0xf7a
+    # Blood Moss
+    pushlist lootTypes 0xf7b
+    # Mandrake Root
+    pushlist lootTypes 0xf86
+    # Garlic
+    pushlist lootTypes 0xf84
+    # Ginseng
+    pushlist lootTypes 0xf85
+    # Nightshade
+    pushlist lootTypes 0xf88
+    # Spiders Silk
+    pushlist lootTypes 0xf8d
+    # Sulphurous Ash
+    pushlist lootTypes 0xf8c
+    
+    # Amber
+    pushlist lootTypes 0xf25
+    # Amethyst
+    pushlist lootTypes 0xf16
+    # Citrine
+    pushlist lootTypes 0xf15
+    # Diamond
+    pushlist lootTypes 0xf26
+    # Emerald
+    pushlist lootTypes 0xf10
+    # Ruby
+    pushlist lootTypes 0xf13
+    # Sapphire
+    pushlist lootTypes 0xf19
+    # Star Sapphire
+    pushlist lootTypes 0xf21
+    # Tourmaline
+    pushlist lootTypes 0xf2d
+    
+    # Arrows
+    pushlist lootTypes 0xf3f
+    # Bandages
+    //pushlist lootTypes 0xe21
+    # Bolts
+    pushlist lootTypes 0x1bfb
+    
+    # Spellbook
+    pushlist lootTypes "spellbook"
+    pushlist lootTypes "martial arts scroll"
+    pushlist lootTypes "halberd"
+    pushlist lootTypes "bardiche"
+    pushlist lootTypes "battle axe"
+    pushlist lootTypes "double axe"
+    pushlist lootTypes "two handed axe"
+    pushlist lootTypes "executioner's axe"
+    pushlist lootTypes "large battle axe"
+    pushlist lootTypes "axe"
+    pushlist lootTypes "scimitar"
+    pushlist lootTypes "longsword"
+    pushlist lootTypes "viking sword"
+    pushlist lootTypes "katana"
+    pushlist lootTypes "cutlass"
+    pushlist lootTypes "broadsword"
+    pushlist lootTypes "war hammer"
+    pushlist lootTypes "war axe"
+    pushlist lootTypes "maul"
+    pushlist lootTypes "quarter staff"
+    pushlist lootTypes "gnarled staff"
+    pushlist lootTypes "black staff"
+    pushlist lootTypes "hammer pick"
+    pushlist lootTypes "club"
+    pushlist lootTypes "shepherd's crook"
+    pushlist lootTypes "war mace"
+    pushlist lootTypes "mace"
+    pushlist lootTypes "Long Spear"
+    pushlist lootTypes "pitchfork"
+    pushlist lootTypes "war fork"
+    pushlist lootTypes "kryss"
+    pushlist lootTypes "short spear"
+    pushlist lootTypes "bow"
+    pushlist lootTypes "crossbow"
+    pushlist lootTypes "heavy crossbow"
+    pushlist lootTypes "bladed staff"
+
+    //id_armor_items
+    pushlist lootTypes "leather tunic"
+    pushlist lootTypes "leather leggings"
+    pushlist lootTypes "leather sleeves"
+    pushlist lootTypes "leather cap"
+    pushlist lootTypes "leather gloves"
+    pushlist lootTypes 'leather gorget'
+    pushlist lootTypes "leather armor"
+    pushlist lootTypes "leather bustier"
+    pushlist lootTypes "leather shorts"
+    pushlist lootTypes "leather skirt"
+    pushlist lootTypes "studded tunic"
+    pushlist lootTypes "studded leggings"
+    pushlist lootTypes "studded sleeves"
+    pushlist lootTypes "studded gloves"
+    pushlist lootTypes "studded gorget"
+    pushlist lootTypes "studded armor"
+    pushlist lootTypes "studded bustier"
+    pushlist lootTypes "bone armor"
+    pushlist lootTypes "bone legs"
+    pushlist lootTypes "bone arms"
+    pushlist lootTypes "bone helmet"
+    pushlist lootTypes "bone gloves"
+    pushlist lootTypes "ringmail tunic"
+    pushlist lootTypes "ringmail leggings"
+    pushlist lootTypes "ringmail sleeves"
+    pushlist lootTypes "helmet"
+    pushlist lootTypes "ringmail gloves"
+    pushlist lootTypes "orc helm"
+    pushlist lootTypes "chainmail tunic"
+    pushlist lootTypes "chainmail leggings"
+    pushlist lootTypes "chainmail coif"
+    pushlist lootTypes "platemail"
+    pushlist lootTypes "platemail legs"
+    pushlist lootTypes "platemail arms"
+    pushlist lootTypes "plate helm"
+    pushlist lootTypes "platemail gloves"
+    pushlist lootTypes "platemail gorget"
+    pushlist lootTypes "plate armor"
+    pushlist lootTypes "bascinet"
+    pushlist lootTypes "close helm"
+    pushlist lootTypes "norse helm"
+    pushlist lootTypes "wooden shield"
+    pushlist lootTypes "kite shield"
+    pushlist lootTypes "buckler "
+    pushlist lootTypes "metal shield"
+    pushlist lootTypes "bronze shield"
+    pushlist lootTypes "kite shield"
+    pushlist lootTypes "heater shield"
+    pushlist lootTypes "Chaos shield"
+    pushlist lootTypes "Order shield"
+
+    //id_bard_items
+    pushlist lootTypes "lap harp"
+    pushlist lootTypes "drum"
+    pushlist lootTypes "lute"
+    pushlist lootTypes "bamboo flute"
+    pushlist lootTypes "tambourine"
+
+    pushlist lootTypes "phylactery"
+    pushlist lootTypes "rune"
+    pushlist lootTypes "clean bandage%s%"
+endif
+
+# Set loot bag
+if not find lootBag backpack
+    overhead 'Set Loot Bag:' 498
+    setvar! lootBag
+    wait 250
+endif
+
+# Look for chest
+if findtype 'metal chest' ground any any 2 as metalChest
+    setvar! chest metalChest
+elseif findtype 'wooden chest' ground any any 2 as woodenChest
+    setvar! chest woodenChest
+else
+    overhead 'No chest found' 38
+    break
+endif
+
+if changeToHarvestAspect == 1
+    wait 200
+    overhead 'Harvest Aspect'
+    say '[aspect'
+    waitforgump 2424293173
+    wait 350
+    gumpresponse 611
+    waitforgump 2424293173
+    wait 350
+    gumpresponse 611
+    waitforgump 2424293173
+    wait 350
+elseif changeToFortuneAspect == 1
+    wait 200
+    overhead 'Fortune Aspect'
+    say '[aspect'
+    waitforgump 2424293173
+    wait 350
+    gumpresponse 611
+    waitforgump 2424293173
+    wait 350
+    gumpresponse 611
+    waitforgump 2424293173
+    wait 350
+endif
+    
+if changeToNecklaceWithRareLinks == 1
+    if findtype '3735' backpack
+        lift '0x4E8F2354'
+        drop backpack
+
+        overhead 'Necklace with Rare Links' 56
+        lift '0x417232FE'
+        drop 'self' InnerTorso
+        #wait 300
+        wait delayToOpenChestDueToNecklaceTimer
+    endif
+endif
+
+
+# Open chest
+dclick chest
+waitforgump 736038070 500
+wait 300
+if gumpexists 736038070
+    setvar! locked 1
+    setvar! trapped 1
+    setvar! trapFirstTime 1
+    setvar! lockFirstTime 1
+else
+    overhead 'Chest not locked!' 38
+endif
+
+# Remove trap
+while trapped = 1 and gumpexists 736038070
+
+    if trapFirstTime == 1
+        gumpresponse 7
+        setvar! trapFirstTime 0
+        wait 250
+    elseif trapFirstTime == 0
+        wait 250
+    endif
+    
+    if insysmsg 'world is saving'
+        for 30
+            overhead 'Waiting for world save...'
+            wait 1000
+            if insysmsg 'save complete'
+                overhead 'Save complete - continue on!' 88
+                replay
+            endif
+        endfor    
+    elseif insysmsg 'cleared it of traps' or insysmsg 'devoid of traps'
+        overhead 'Trap removed!' 168
+        setvar! trapped 0
+        break
+    elseif insysmsg 'attempt to remove traps' or insysmsg 'make some progress towards clearing it of traps' or insysmsg 'continue to remove traps'
+        overhead 'Removing trap...' 243
+        for 20
+            if insysmsg 'cleared it of traps' or insysmsg 'devoid of traps'
+                overhead 'Trap removed!' 168
+                setvar! trapped 0
+                break
+            else
+                wait 250
+            endif
+        endfor
+    elseif insysmsg 'You must wait a few moments' or insysmsg 'reach that'
+        overhead 'Chest Open?' 168
+    elseif insysmsg 'You trigger a trap!'
+        stop
+    else
+        overhead 'Check Script! - Trap section!' 38
+        wait 250
+    endif
+endwhile
+wait 350
+
+# Pick lock
+while locked = 1 and gumpexists 736038070
+
+    if lockFirstTime == 1
+        gumpresponse 4
+        setvar! lockFirstTime 0
+        wait 250
+    elseif lockFirstTime == 0
+        wait 250
+    endif
+    
+    if insysmsg 'world is saving'
+        for 30
+            overhead 'Waiting for world save...'
+            wait 1000
+            if insysmsg 'save complete'
+                overhead 'Save complete - continue on!' 88
+                replay
+            endif
+        endfor      
+    elseif not gumpexists 736038070 or insysmsg 'successfully pick the lock'
+        overhead 'Lock picked!' 168
+        setvar! locked 0
+        break
+    elseif insysmsg 'attempt to pick the lock' or insysmsg 'make some progress on the lock' or insysmsg 'continue to pick the lock'
+        overhead 'Picking lock...' 243
+        for 20
+            if insysmsg 'successfully pick the lock'
+                overhead 'Lock picked!' 168
+                setvar! locked 0
+                break
+            else
+                wait 250
+            endif
+        endfor
+    else
+        overhead 'Check Script! - Lock section!' 38
+        wait 250
+    endif
+endwhile
+
+
+if dropMapDirtToFloor = 1
+    wait 350
+
+    if findtype "map" backpack as item
+        overhead "Dropped map on floor" 1150
+        lift item
+        droprelloc 0 0
+        wait 300
+    endif
+    if findtype "dirt patch" backpack as dirt
+        overhead "Dropped dirt on floor" 1150
+        lift dirt 200
+        droprelloc 0 0
+        wait 300
+    endif
+    if findtype "cut%s% of raw ribs" backpack as ribs
+        overhead "Dropped ribs on floor" 1150
+        lift ribs 200
+        droprelloc 0 0
+        wait 300
+    endif    
+endif
+
+# Loot
+overhead 'Looting...' 88
+foreach t in lootTypes
+    while findtype t chest as loot
+        getlabel loot lootLabel
+        overhead lootLabel 88
+        sysmsg lootLabel 88
+        lift loot 10000
+        drop lootBag -1 -1 -1
+        @ignore loot
+    endwhile
+endfor
+
+# GTFO?
+if autoRecall = 1
+    if findtype "metal chest|wooden chest" ground -1 -1 2 as LockedBox
+        getlabel LockedBox desc2
+        if '(0 items, 0 stones)' in desc2
+            overhead 'GTFO!'
+            menu LockedBox 1
+            cast 'Recall'
+            wft
+            target recallTome
+        endif
+    endif
+endif 
+
+unsetvar chest
+overhead '------Script Complete!------'
